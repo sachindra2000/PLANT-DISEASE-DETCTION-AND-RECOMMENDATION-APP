@@ -1,0 +1,156 @@
+<!--
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Keras Model Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="image-container">
+        <div class="video-container">
+            <video autoplay muted loop id="background-video">
+                <source src = "1509175-hd_1920_1080_25fps.mp4" type="video/mp4">
+            </video>>
+        </div>"
+        <h1>WHEAT AND POTATO DISEASE DETECTION</h1>
+    </div>
+
+    <div class="image-container3">
+        <h3> HOW TO USE THE WEBSITE</h3>
+        <ul>1. upload the picture.</ul>
+        <ul>2. click on the predict button.</ul>
+        <ul>3. the model will predict the disease.</ul>
+        <ul>4. this website will also give you the recommendations.</ul>
+    </div>
+
+    </div>
+    <div class="container">
+        <div class="box box1">
+            <h2> THE POTATO MODEL </h2>
+            <input type="file" id="potatoInputFile" name="file" accept="image/*" required>
+            <button onclick="predict('potato')">Predict</button>
+            <h2>Potato Model Prediction: <span id="potatoModelResult"></span></h2>
+        </div>
+        
+        <div class="box box2">
+            <h2> THE WHEAT MODEL </h2>
+            <input type="file" id="wheatInputFile" name="file" accept="image/*" required>
+            <button onclick="predict('wheat')">Predict</button>
+            <h2>Wheat Model Prediction: <span id="wheatModelResult"></span></h2>
+        </div>
+    </div>
+    
+    <div class="container2">
+        <div class="image-container2">
+            <h1> RECOMMENDATIONS </h1>
+        </div>
+        <div class="box1 box3">
+            
+        </div>
+    </div>
+
+    <script>
+        async function predict(model) {
+            const fileInput = document.getElementById(model + 'InputFile');
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('model', model);
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+            if (model === 'potato') {
+                document.getElementById('potatoModelResult').innerText = result.model_prediction;
+            } else if (model === 'wheat') {
+                document.getElementById('wheatModelResult').innerText = result.model_prediction;
+            }
+        }
+    </script>
+</body>
+</html>
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Keras Model Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    
+        <div class="video-container">
+            <video autoplay muted loop id="background-video">
+                <source src="{{url_for('static',filename='1509175-hd_1920_1080_25fps.mp4')}}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <h1 class="video-heading">WHEAT & POTATO DISEASE DETECTION</h1>
+        </div>
+        
+
+    <div class="image-container3">
+        <h3> HOW TO USE THE WEBSITE</h3>
+        <ul>1. upload the picture.</ul>
+        <ul>2. click on the predict button.</ul>
+        <ul>3. the model will predict the disease.</ul>
+        <ul>4. this website will also give you the recommendations.</ul>
+    </div>
+
+    <div class="container">
+        <div class="box box1">
+            <h2> THE POTATO MODEL </h2>
+            <input type="file" id="potatoInputFile" name="file" accept="image/*" required>
+            <button onclick="predict('potato')">Predict</button>
+            <h2>Potato Model Prediction: <span id="potatoModelResult"></span></h2>
+        </div>
+        
+        <div class="box box2">
+            <h2> THE WHEAT MODEL </h2>
+            <input type="file" id="wheatInputFile" name="file" accept="image/*" required>
+            <button onclick="predict('wheat')">Predict</button>
+            <h2>Wheat Model Prediction: <span id="wheatModelResult"></span></h2>
+        </div>
+    </div>
+    
+    <div class="container2">
+        <div class="image-container2">
+            <h1> RECOMMENDATIONS </h1>
+            <h2><span id="recommendations"></span></h2>
+        </div>
+        <div class="box1 box3">
+            <!-- Add your recommendations content here -->
+             <h2></h2><span id="recommendations"></span></h2>
+        </div>
+    </div>
+
+    <script>
+        async function predict(model) {
+        const fileInput = document.getElementById(model + 'InputFile');
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('model_type', model);
+
+        const response = await fetch('/predict', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const result = await response.json();
+        if (result.error) {
+            alert(result.error);
+        } else {
+            const predictionText = `Predicted Class: ${result.predicted_class}, Confidence: ${result.confidence}`;
+            if (model === 'potato') {
+                document.getElementById('potatoModelResult').innerText = predictionText;
+            } else if (model === 'wheat') {
+                document.getElementById('wheatModelResult').innerText = predictionText;
+            }
+            document.getElementById('recommendations').innerText = `Recommendations: ${result.recommendations}`;
+        }
+    }
+</script>
+</body>
+</html>
