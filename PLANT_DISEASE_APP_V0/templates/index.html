@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Classification</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        form { margin-top: 20px; }
+        .result { margin-top: 20px; }
+        img { max-width: 300px; }
+    </style>
+</head>
+<body>
+
+<h1>Plant Disease Classification</h1>
+<p>Upload an image to classify the plant disease.</p>
+
+<form action="/" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" accept="image/*" required>
+    <button type="submit">Classify</button>
+</form>
+
+{% if result %}
+<div class="result">
+    <h2>Prediction Result</h2>
+    <p><strong>Class:</strong> {{ result.class_label }}</p>
+    <p><strong>Confidence:</strong> {{ result.confidence }}</p>
+    <img src="{{ result.image_path }}" alt="Uploaded Image">
+</div>
+{% endif %}
+
+</body>
+</html>
